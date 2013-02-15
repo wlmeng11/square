@@ -50,6 +50,10 @@ static double angle( Point pt1, Point pt2, Point pt0 )
     return (dx1*dx2 + dy1*dy2)/sqrt((dx1*dx1 + dy1*dy1)*(dx2*dx2 + dy2*dy2) + 1e-10);
 }
 
+static double length( Point pt1, Point pt2) {
+
+}
+
 // returns sequence of squares detected on the image.
 // the sequence is stored in the specified memory storage
 static void findSquares( const Mat& image, vector<vector<Point> >& squares )
@@ -129,7 +133,7 @@ static void findSquares( const Mat& image, vector<vector<Point> >& squares )
                     }
 
                     // if cosines of all angles are small
-                    // (all angles are ~90 degree) then write quandrangle
+                    // (all angles are ~90 degree) then write quadrangle
                     // vertices to resultant sequence
                     if( maxCosine < 0.3 )
                         squares.push_back(approx);
@@ -156,7 +160,7 @@ static void drawSquares( Mat& image, const vector<vector<Point> >& squares )
 
 int main(int /*argc*/, char** /*argv*/)
 {
-    static const char* names[] = { "/home/wlmeng/workspace/opencv/shapes.png", 0 };
+    static const char* names[] = { "shapes.png", 0 };
     help();
     namedWindow( wndname, 1 );
     vector<vector<Point> > squares;
