@@ -58,7 +58,22 @@ static int isEquilateral(vector<Point>& approx) {
 		cout << "x: " << approx[i].x << endl;
 		cout << "y: " << approx[i].y << endl;
 	}*/
-
+	double distance[4];
+	for (int i = 0; i < approx.size(); i++) {
+		double dx, dy;
+		dx = (approx[i].x - approx[(i + 1) % 4].x);
+		dy = (approx[i].y - approx[(i + 1) % 4].y);
+		distance[i] = sqrt((dx * dx) + (dy * dy));
+		/*cout << "Point: " << i << approx[i] << endl;
+		cout << "Distance from " << i << " to " << (i + 1) % 4 << endl
+				<< distance[i] << endl;*/
+	}
+	for (int i = 0; i < approx.size(); i++) {
+		double r = distance[i]/distance[(i+1)%4];
+		if(r > 1.05 || r < 0.95)
+			return 0;
+	}
+	return 1;
 }
 
 // returns sequence of squares detected on the image.
@@ -145,23 +160,25 @@ static void findSquares( const Mat& image, vector<vector<Point> >& squares )
 				// 3 conditions to be a square
                 if( approx.size() == 4 && //4 vertices
                     fabs(contourArea(Mat(approx))) > 1000 && //greater than this size
-                    isContourConvex(Mat(approx)) ) //convex
+                    isContourConvex(Mat(approx)) && //convex
+                    isEquilateral(approx)
+                )
                 {
 					/*for (int i = 0; i < approx.size(); i++) { //print paired coordinates and individual coordinates
 						cout << i << approx[i] << endl;
 						cout << "x: " << approx[i].x << endl;
 						cout << "y: " << approx[i].y << endl;
 					}*/
+                	/*double distance[4];
                 	for(int i=0; i < approx.size(); i++) {
-                		double distance;
 						double dx, dy;
 						dx = (approx[i].x - approx[(i+1)%4].x);
 						dy = (approx[i].y - approx[(i+1)%4].y);
-                		distance = sqrt( (dx*dx)+(dy*dy) );
+                		distance[i] = sqrt( (dx*dx)+(dy*dy) );
                 		cout << "Point: " << i << approx[i] << endl;
-                		cout << "Distance from " << i << " to " << (i+1)%4 << endl << distance << endl;
+                		cout << "Distance from " << i << " to " << (i+1)%4 << endl << distance[i] << endl;
                 	}
-                	cout << endl;
+                	cout << endl;*/
 
                     double maxCosine = 0;
 
