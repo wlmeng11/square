@@ -17,6 +17,8 @@ int main() {
 	image = cv::imread("shapes.png");
 	if (!image.data) {
 		// no image has been created...
+		cerr << "No image data" << endl;
+		return -1;
 	}
 
 	std::cout << "size: " << image.size().height << " , " << image.size().width << std::endl;
