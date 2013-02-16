@@ -21,6 +21,8 @@
 using namespace cv;
 using namespace std;
 
+#define SQR(x) (x*x)
+
 static void help()
 {
     cout <<
@@ -50,7 +52,12 @@ static double angle( Point pt1, Point pt2, Point pt0 )
     return (dx1*dx2 + dy1*dy2)/sqrt((dx1*dx1 + dy1*dy1)*(dx2*dx2 + dy2*dy2) + 1e-10);
 }
 
-static double length( Point pt1, Point pt2) {
+static int isEquilateral(vector<Point>& approx) {
+	/*for (int i = 0; i < approx.size(); i++) { //print paired coordinates and individual coordinates
+		cout << i << approx[i] << endl;
+		cout << "x: " << approx[i].x << endl;
+		cout << "y: " << approx[i].y << endl;
+	}*/
 
 }
 
@@ -102,6 +109,18 @@ static void findSquares( const Mat& image, vector<vector<Point> >& squares )
             // find contours and store them all as a list
             findContours(gray, contours, CV_RETR_LIST, CV_CHAIN_APPROX_SIMPLE);
 
+           /* cout << "All contours:\n";
+			for (int i = 0; i < contours.size(); i++) {
+				std::cout << contours[i] << std::endl;
+			}*/
+
+            /*cout << "All contours:\n";
+            for(int i = 0; i < contours.size(); i++) {
+              	for(int j= 0; j < contours[j].size(); j++) {
+              		std::cout << contours[i][j] << std::endl;
+              	}
+            }*/
+
             vector<Point> approx;
 
             // test each contour
@@ -110,6 +129,11 @@ static void findSquares( const Mat& image, vector<vector<Point> >& squares )
                 // approximate contour with accuracy proportional
                 // to the contour perimeter
                 approxPolyDP(Mat(contours[i]), approx, arcLength(Mat(contours[i]), true)*0.02, true);
+
+				 /*cout << "approx:\n";
+				 for (int i = 0; i < approx.size(); i++) {
+				 std::cout << approx[i] << std::endl;
+				 }*/
 
                 // square contours should have 4 vertices after approximation
                 // relatively large area (to filter out noisy contours)
@@ -123,6 +147,22 @@ static void findSquares( const Mat& image, vector<vector<Point> >& squares )
                     fabs(contourArea(Mat(approx))) > 1000 && //greater than this size
                     isContourConvex(Mat(approx)) ) //convex
                 {
+					/*for (int i = 0; i < approx.size(); i++) { //print paired coordinates and individual coordinates
+						cout << i << approx[i] << endl;
+						cout << "x: " << approx[i].x << endl;
+						cout << "y: " << approx[i].y << endl;
+					}*/
+                	for(int i=0; i < approx.size(); i++) {
+                		double distance;
+						double dx, dy;
+						dx = (approx[i].x - approx[(i+1)%4].x);
+						dy = (approx[i].y - approx[(i+1)%4].y);
+                		distance = sqrt( (dx*dx)+(dy*dy) );
+                		cout << "Point: " << i << approx[i] << endl;
+                		cout << "Distance from " << i << " to " << (i+1)%4 << endl << distance << endl;
+                	}
+                	cout << endl;
+
                     double maxCosine = 0;
 
                     for( int j = 2; j < 5; j++ )
